@@ -239,5 +239,5 @@ app.post("/edit", (req, res) => {
 app.use(express.static(path.join(__dirname, "/public")));
 
 app.listen(port, () => {
-  console.log("listening to 3001");
+  console.log("Listening to 3001");
 });
