@@ -35,13 +35,13 @@ app.use(
 // });
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAVuxWbbh1Imy3qobOWI16n9ynrP7ggA9Y",
-  authDomain: "authentication-28cbf.firebaseapp.com",
-  databaseURL: "https://authentication-28cbf.firebaseio.com",
-  projectId: "authentication-28cbf",
-  storageBucket: "authentication-28cbf.appspot.com",
-  messagingSenderId: "358686645522",
-  appId: "1:358686645522:web:3eb736f4a4bf9cc7da67cb",
+  apiKey: process.env.apiKey,
+  authDomain: process.env.authDomain,
+  databaseURL: process.env.databaseURL,
+  projectId: process.env.projectId,
+  storageBucket: process.env.storageBucket,
+  messagingSenderId: process.env.messagingSenderId,
+  appId: process.env.appId,
 };
 
 firebase.initializeApp(firebaseConfig);
