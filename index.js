@@ -4,6 +4,7 @@ const app = express();
 const firebase = require("firebase");
 const _uuid = require("uuid");
 const JSAlert = require("js-alert");
+const port = process.env.PORT || 3001;
 //var ui = new firebaseui.auth.AuthUI(firebase.auth());
 
 //const auth = require("firebase/auth");
@@ -81,6 +82,7 @@ app.get("/logout", (req, res) => {
   auth.signOut().then(() => {
     console.log("user signed out");
     res.redirect("/login");
+    return;
   });
 });
 
@@ -90,6 +92,7 @@ app.post("/", (req, res) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
+    image: req.body.image,
   };
 
   auth
@@ -100,6 +103,7 @@ app.post("/", (req, res) => {
       profile
         .updateProfile({
           displayName: person.name,
+          photoURL: person.image,
         })
         .then(function () {
           // Update successful.
@@ -150,9 +154,6 @@ app.post("/", (req, res) => {
 // });
 
 app.post("/login", (req, res) => {
-  if (auth.currentUser) {
-    res.redirect("/");
-  }
   const email = req.body.email;
   const password = req.body.password;
 
@@ -161,22 +162,26 @@ app.post("/login", (req, res) => {
     .then((users) => {
       //console.log(users.user);
       res.redirect("/profile");
+      return;
     })
     .catch((err) => {
+      res.redirect("/profile");
       JSAlert.alert("No Such User");
+      return;
     });
 });
 
 app.get("/profile", (req, res) => {
   if (auth.currentUser) {
-    const { displayName, email } = auth.currentUser;
-    res.render("profile", { displayName, email });
+    const { displayName, email, photoURL } = auth.currentUser;
+    res.render("profile", { displayName, email, photoURL });
   } else res.redirect("/login");
 });
 
 app.get("/edit", (req, res) => {
   if (auth.currentUser) {
-    res.render("edit");
+    const user = auth.currentUser;
+    res.render("edit", { user });
   } else res.redirect("/login");
 });
 
@@ -185,10 +190,12 @@ app.post("/edit", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   let profile = auth.currentUser;
+  const photoURL = req.body.image;
 
   profile
     .updateProfile({
       displayName,
+      photoURL,
     })
     .then(function () {
       // Update successful.
@@ -231,6 +238,6 @@ app.post("/edit", (req, res) => {
 
 app.use(express.static(path.join(__dirname, "/public")));
 
-app.listen(3001, () => {
+app.listen(port, () => {
   console.log("listening to 3001");
 });
